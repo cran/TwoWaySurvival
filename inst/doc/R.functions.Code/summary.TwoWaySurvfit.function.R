@@ -1,0 +1,21 @@
+"summary.TwoWaySurvfit" <-
+function(x,...)
+{
+cat("beta coefficients","\n\n")
+print(x$fix.coef,...)
+cat("","\n\n")
+cat("estimated random effects","\n\n")
+print(x$random.coef,...)
+cat("","\n\n")
+cat("Penalties of random components","\n\n")
+print(x$penalty,...)
+cat("","\n\n")
+cat("Variances of beta coefficients estimates","\n\n")
+print(x$var.fix,...)
+cat("","\n\n")
+cat("marginal log-likelihood at initial value","\n\n")
+print(x$log.lik.margin.start,...)
+cat("","\n\n")
+cat("marginal log-likelihood at optimum","\n\n")
+print(x$log.lik.margin,...)
+}
