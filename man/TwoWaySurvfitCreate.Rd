@@ -13,7 +13,7 @@ For flexible smoothing of the effects truncated polynomial splines are employed.
 model specification are given below.}
   \item{data}{an optional data frame containing variables in the model. If not supplied the handling of missing values will be accordingly 
         to the value of 'na.action'.}
-  \item{na.action}{an optional parameter for handling with missing data}
+  \item{na.action}{an optional parameter for handling with missing data.}
   \item{control}{an optional list argument with control parameters needed for optimization routine. If not specified,
   default values from 'TwoWaySurvfitControl' will be taken; otherwise the values, which are defined by user, will
   overwrite the defaults.}
@@ -36,11 +36,15 @@ in the body of 'TwoWaySurvfitCreate'. Its code is well commented and can be clea
 
 The working spline bases are ones consisted from truncated polynomials. Other alternativ could be B-splines, but has not
 been implemented yet and might be considered in the following update of the package.
+
+The computation procedure can take considerable time, depending on data supplied. All evaluations are written in R-code, so no external
+program code like C or Fortran has been used. We advice initialy to set the number of iterations not to bee too large, and eventually increase it
+if needed.
 }
 \value{An object of class 'TwoWaySurvit'. It has methods for 'print', 'summary' and 'plot'.
 }
 \references{Kauermann G. and Khomski P. (2006). Additiv two way hazards model with varying coefficients.
-\emph{Computational Statistics and Data Analysis}, in press}
+\emph{Computational Statistics and Data Analysis}, in press.}
 \author{Pavel Khomski <pkhomski@wiwi.uni-bielefeld.de>}
 \seealso{ \code{\link{TwoWaySurv}}, \code{\link{TwoWaySurvfitControl}}, \code{\link{TwoWaySurvfitObject}}
 }
@@ -48,13 +52,14 @@ been implemented yet and might be considered in the following update of the pack
 birth.time<-c(1,11,23,4,23,5,7,12,5,12,23,12,15,21,4,6,1,4,13,11)
 status<-c(1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,1,0,1)
 my.TwoWaySurv.object<-TwoWaySurv(surv.time=surv.time,birth.time=birth.time,status=status)
-my.TwoWaySurvit.object<-TwoWaySurvfitCreate(formula=my.TwoWaySurv.object, na.action=na.fail, 
-                  control = list(niter.epoch=50,print.epoch=FALSE,method="fix"))
+my.TwoWaySurvfit.object<-TwoWaySurvfitCreate(formula=my.TwoWaySurv.object, na.action=na.fail, 
+                         control = list(niter.epoch=50,print.epoch=FALSE,method="fix"))
 x1<-rnorm(20)
 x2<-rt(20,2)
-my.TwoWaySurvit.object<-TwoWaySurvfitCreate(formula = my.TwoWaySurv.object~x1+x2,data=data.frame(x1,x2),
-                  na.action = na.fail,control = TwoWaySurvfitControl(niter.epoch=50,print.epoch=FALSE,method="fix"))
+my.TwoWaySurvfit.object<-TwoWaySurvfitCreate(formula = my.TwoWaySurv.object~x1+x2,data=data.frame(x1,x2),
+                         na.action = na.fail,control = TwoWaySurvfitControl(niter.epoch=50,print.epoch=FALSE,method="fix"))
 }
 \keyword{survival}
 \keyword{nonparametric}
 \keyword{smooth}
+
