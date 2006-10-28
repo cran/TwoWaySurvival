@@ -1,4 +1,4 @@
-TwoWayVarCoefBackfit<-function(data.set=data.set,control=control)  
+BackfitTruncated<-function(data.set=data.set,control=control)  
 {  
 
 #############################################################
@@ -40,13 +40,16 @@ K.b<-length(knots.b)
 #################################################
 #create artificial poisson data##################
 #################################################
-survival.to.poisson <- function (time=time, status=status, x=NULL)
+survival.to.poisson <- function(time=time, status=status, x=NULL)
 {
 N <- length(time)
 event.time <- time[status==1]
 
 #create the grid
-grid <- c(unique(sort(event.time)),max(time+1))
+#grid<-c(unique(sort(event.time)),max(time+1))
+#grid<-c(sort(sample(unique(time[status==1]),control$number.int)),max(time+1))
+grid<-round(quantile(unique(time),prob=seq(0,1,le=control$number.int)),max(time+1))
+
 m <- length(grid)
 grid.minus1 <- c(0,grid[1:(m-1)])
 grid.plus1 <- c(grid[2:m],max(time)+2)
@@ -683,6 +686,10 @@ names(log.lik.margin.start)<-c("log.lik.margin.t","log.lik.margin.b")
 
 
 
+factor.names<-colnames(Design.variables)
+
+#rm(offset.tij.list,unlist.offset.tij.list,offset.bi,y.poisson.list,y.poisson,I.t,I.b,I.t.pen,I.b.pen,Design.variables,Z.birth,Z.time,inverse.b,inverse.t,indizes,Design.matrix.t,Design.matrix.b,help.matrix,help.cut,m.list)
+#for (i in 1:30) gc()
 
 
 ##################################################################
@@ -718,14 +725,14 @@ df.t.Baseline<-sum(diag((inverse.I.tb%*%I.tb.0)[1:(2+K.t),1:(2+K.t)]))
 df.b.Baseline<-sum(diag((inverse.I.tb%*%I.tb.0)[((p+1)*(2+K.t)+1):((p+1)*(2+K.t)+1+K.b),((p+1)*(2+K.t)+1):((p+1)*(2+K.t)+1+K.b)]))
 if (p > 0) for (k in 1:p)
   {
-assign(paste("df.t.",colnames(Design.variables)[k+1],sep=""),sum(diag((inverse.I.tb%*%I.tb.0)[(2+K.t+2*(k-1)+(k-1)*K.t+1):(2+K.t+2*k+k*K.t),(2+K.t+2*(k-1)+(k-1)*K.t+1):(2+K.t+2*k+k*K.t)])))
-assign(paste("df.b.",colnames(Design.variables)[k+1],sep=""),sum(diag((inverse.I.tb%*%I.tb.0)[((p+1)*(2+K.t)+1+K.b+(k-1)+(k-1)*K.b+1):((p+1)*(2+K.t)+1+K.b+k+k*K.b),((p+1)*(2+K.t)+1+K.b+(k-1)+(k-1)*K.b+1):((p+1)*(2+K.t)+1+K.b+k+k*K.b)])))
+assign(paste("df.t.",factor.names[k+1],sep=""),sum(diag((inverse.I.tb%*%I.tb.0)[(2+K.t+2*(k-1)+(k-1)*K.t+1):(2+K.t+2*k+k*K.t),(2+K.t+2*(k-1)+(k-1)*K.t+1):(2+K.t+2*k+k*K.t)])))
+assign(paste("df.b.",factor.names[k+1],sep=""),sum(diag((inverse.I.tb%*%I.tb.0)[((p+1)*(2+K.t)+1+K.b+(k-1)+(k-1)*K.b+1):((p+1)*(2+K.t)+1+K.b+k+k*K.b),((p+1)*(2+K.t)+1+K.b+(k-1)+(k-1)*K.b+1):((p+1)*(2+K.t)+1+K.b+k+k*K.b)])))
   }
 #write out d.f.
 df<-matrix(0,nrow=p+1,ncol=2)
 df[1,]<-c(df.t.Baseline,df.b.Baseline)
-if (p > 0) for (k in 1:p) df[k+1,]<-c(get(paste("df.t.",colnames(Design.variables)[k+1],sep="")),get(paste("df.b.",colnames(Design.variables)[k+1],sep="")))
-dimnames(df)<-list(c("Baseline",colnames(Design.variables)[-1]),c("t","b"))
+if (p > 0) for (k in 1:p) df[k+1,]<-c(get(paste("df.t.",factor.names[k+1],sep="")),get(paste("df.b.",factor.names[k+1],sep="")))
+dimnames(df)<-list(c("Baseline",factor.names[-1]),c("t","b"))
 
 
 
@@ -760,9 +767,9 @@ deviation.t.Baseline<-qnorm(0.975)*sqrt(variance.t.Baseline)
 if (p > 0)
 for (k in 1:p)
   {
-assign(paste("co.variance.teta.t.",colnames(Design.variables)[k+1],sep=""),co.variance.teta.t[(2+K.t+2*k-1+(k-1)*K.t):(2+K.t+2*k+k*K.t),(2+K.t+2*k-1+(k-1)*K.t):(2+K.t+2*k+k*K.t)])
-assign(paste("variance.t.",colnames(Design.variables)[k+1],sep=""),apply(C.t.grid,1,FUN=function(help.row) t(help.row)%*%get(paste("co.variance.teta.t.",colnames(Design.variables)[k+1],sep=""))%*%help.row))
-assign(paste("deviation.t.",colnames(Design.variables)[k+1],sep=""),qnorm(0.975)*sqrt(get(paste("variance.t.",colnames(Design.variables)[k+1],sep=""))))
+assign(paste("co.variance.teta.t.",factor.names[k+1],sep=""),co.variance.teta.t[(2+K.t+2*k-1+(k-1)*K.t):(2+K.t+2*k+k*K.t),(2+K.t+2*k-1+(k-1)*K.t):(2+K.t+2*k+k*K.t)])
+assign(paste("variance.t.",factor.names[k+1],sep=""),apply(C.t.grid,1,FUN=function(help.row) t(help.row)%*%get(paste("co.variance.teta.t.",factor.names[k+1],sep=""))%*%help.row))
+assign(paste("deviation.t.",factor.names[k+1],sep=""),qnorm(0.975)*sqrt(get(paste("variance.t.",factor.names[k+1],sep=""))))
 }
              
 
@@ -778,9 +785,9 @@ deviation.b.Baseline<-qnorm(0.975)*sqrt(variance.b.Baseline)
 if (p > 0)
 for (k in 1:p)
   {
-assign(paste("co.variance.teta.b.",colnames(Design.variables)[k+1],sep=""),co.variance.teta.b[(1+K.b+(k-1)+(k-1)*K.b+1):(1+K.b+k+k*K.b),(1+K.b+(k-1)+(k-1)*K.b+1):(1+K.b+k+k*K.b)])
-assign(paste("variance.b.",colnames(Design.variables)[k+1],sep=""),apply(C.b.grid,1,FUN=function(help.row) t(help.row)%*%get(paste("co.variance.teta.b.",colnames(Design.variables)[k+1],sep=""))%*%help.row))
-assign(paste("deviation.b.",colnames(Design.variables)[k+1],sep=""),qnorm(0.975)*sqrt(get(paste("variance.b.",colnames(Design.variables)[k+1],sep=""))))
+assign(paste("co.variance.teta.b.",factor.names[k+1],sep=""),co.variance.teta.b[(1+K.b+(k-1)+(k-1)*K.b+1):(1+K.b+k+k*K.b),(1+K.b+(k-1)+(k-1)*K.b+1):(1+K.b+k+k*K.b)])
+assign(paste("variance.b.",factor.names[k+1],sep=""),apply(C.b.grid,1,FUN=function(help.row) t(help.row)%*%get(paste("co.variance.teta.b.",factor.names[k+1],sep=""))%*%help.row))
+assign(paste("deviation.b.",factor.names[k+1],sep=""),qnorm(0.975)*sqrt(get(paste("variance.b.",factor.names[k+1],sep=""))))
 }
 
 
@@ -807,8 +814,8 @@ if (p > 0)
 {
 for (k in 1:p)
   {
-assign(paste("alpha.t.",colnames(Design.variables)[k+1],sep=""),cbind(1,grid.t)%*%beta.t[grep(paste("beta.t.",colnames(Design.variables)[k+1],sep=""),names(beta.t),fixed=TRUE)]+B.grid.t%*%u.t[grep(paste("u.t.",colnames(Design.variables)[k+1],sep=""),names(u.t),fixed=TRUE)])
-assign(paste("alpha.b.",colnames(Design.variables)[k+1],sep=""),grid.b*beta.b[grep(paste("beta.b.",colnames(Design.variables)[k+1],sep=""),names(beta.b),fixed=TRUE)]+B.grid.b%*%u.b[grep(paste("u.b.",colnames(Design.variables)[k+1],sep=""),names(u.b),fixed=TRUE)])
+assign(paste("alpha.t.",factor.names[k+1],sep=""),cbind(1,grid.t)%*%beta.t[grep(paste("beta.t.",factor.names[k+1],sep=""),names(beta.t),fixed=TRUE)]+B.grid.t%*%u.t[grep(paste("u.t.",factor.names[k+1],sep=""),names(u.t),fixed=TRUE)])
+assign(paste("alpha.b.",factor.names[k+1],sep=""),grid.b*beta.b[grep(paste("beta.b.",factor.names[k+1],sep=""),names(beta.b),fixed=TRUE)]+B.grid.b%*%u.b[grep(paste("u.b.",factor.names[k+1],sep=""),names(u.b),fixed=TRUE)])
 }
 }
 
@@ -824,13 +831,13 @@ t.frame<-NULL;b.frame<-NULL
 if (p > 0)
 {  
 for (k in 1:p)
-  {list.t.frame[[k]]<-get(paste("alpha.t.",colnames(Design.variables)[k+1],sep=""))
-   list.b.frame[[k]]<-get(paste("alpha.b.",colnames(Design.variables)[k+1],sep=""))
+  {list.t.frame[[k]]<-get(paste("alpha.t.",factor.names[k+1],sep=""))
+   list.b.frame[[k]]<-get(paste("alpha.b.",factor.names[k+1],sep=""))
    t.frame<-cbind(t.frame,list.t.frame[[k]])
    b.frame<-cbind(b.frame,list.b.frame[[k]])
   }
 varying.frame<-data.frame(alpha.t.Baseline,t.frame,alpha.b.Baseline,b.frame)
-names(varying.frame)<-c("alpha.t.Baseline",paste("alpha.t.",colnames(Design.variables)[2:(p+1)],sep=""),"alpha.b.Baseline",paste("alpha.b.",colnames(Design.variables)[2:(p+1)],sep=""))
+names(varying.frame)<-c("alpha.t.Baseline",paste("alpha.t.",factor.names[2:(p+1)],sep=""),"alpha.b.Baseline",paste("alpha.b.",factor.names[2:(p+1)],sep=""))
 } else
 {varying.frame<-data.frame(alpha.t.Baseline,alpha.b.Baseline)
  names(varying.frame)<-c("alpha.t.Baseline","alpha.b.Baseline")
@@ -845,13 +852,13 @@ t.frame<-NULL;b.frame<-NULL
 if (p > 0)
 {  
 for (k in 1:p)
-  {list.t.frame[[k]]<-get(paste("deviation.t.",colnames(Design.variables)[k+1],sep=""))
-   list.b.frame[[k]]<-get(paste("deviation.b.",colnames(Design.variables)[k+1],sep=""))
+  {list.t.frame[[k]]<-get(paste("deviation.t.",factor.names[k+1],sep=""))
+   list.b.frame[[k]]<-get(paste("deviation.b.",factor.names[k+1],sep=""))
    t.frame<-cbind(t.frame,list.t.frame[[k]])
    b.frame<-cbind(b.frame,list.b.frame[[k]])
   } 
 deviation.frame<-data.frame(deviation.t.Baseline,t.frame,deviation.b.Baseline,b.frame)
-names(deviation.frame)<-c("deviation.t.Baseline",paste("deviation.t.",colnames(Design.variables)[2:(p+1)],sep=""),"deviation.b.Baseline",paste("deviation.b.",colnames(Design.variables)[2:(p+1)],sep=""))
+names(deviation.frame)<-c("deviation.t.Baseline",paste("deviation.t.",factor.names[2:(p+1)],sep=""),"deviation.b.Baseline",paste("deviation.b.",factor.names[2:(p+1)],sep=""))
 } else
 {deviation.frame<-data.frame(deviation.t.Baseline,deviation.b.Baseline)
 names(deviation.frame)<-c("deviation.t.Baseline","deviation.b.Baseline")
@@ -862,7 +869,7 @@ grid.frame<-data.frame(grid.t=grid.t,grid.b=grid.b)
 
 
 
-list(fix.coef=fix.coef,random.coef=random.coef,penalty=penalty,var.fix=var.fix,var.random=var.random,log.lik.margin.start=log.lik.margin.start,log.lik.margin=log.lik.margin,df=df,df.total=sum(df),niter.epoch=iter.epoch,varying.frame=varying.frame,deviation.frame=deviation.frame,grid.frame=grid.frame,p=p,factor.names=colnames(Design.variables)[2:length(colnames(Design.variables))])
+list(fix.coef=fix.coef,random.coef=random.coef,penalty=penalty,var.fix=var.fix,var.random=var.random,log.lik.margin.start=log.lik.margin.start,log.lik.margin=log.lik.margin,df=df,df.total=sum(df),niter.epoch=iter.epoch,varying.frame=varying.frame,deviation.frame=deviation.frame,grid.frame=grid.frame,p=p,factor.names=factor.names[-1])
 
 
 

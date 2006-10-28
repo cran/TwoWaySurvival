@@ -1,7 +1,7 @@
 "TwoWaySurvfitControl" <-
-function(niter.epoch=100,niter.penalty=2,tol.epoch.theta=1e-08,tol.epoch.variance=1e-08,tol.penalty=1e-08,print.epoch=FALSE,print.penalty=FALSE,print.log.lik=FALSE,print.estimates=FALSE,method="fix",...)
+function(niter.epoch=100,niter.penalty=2,tol.epoch.theta=1e-08,tol.epoch.variance=1e-08,tol.penalty=1e-08,print.epoch=FALSE,print.penalty=FALSE,print.log.lik=FALSE,print.estimates=FALSE,method="fix",number.int=60,...)
 {
-list(niter.epoch=100,niter.penalty=2,tol.epoch.theta=1e-08,tol.epoch.variance=1e-08,tol.penalty=1e-08,print.epoch=FALSE,print.penalty=FALSE,print.log.lik=FALSE,print.estimates=FALSE,method="fix",...) 
+list(niter.epoch=100,niter.penalty=2,tol.epoch.theta=1e-08,tol.epoch.variance=1e-08,tol.penalty=1e-08,print.epoch=FALSE,print.penalty=FALSE,print.log.lik=FALSE,print.estimates=FALSE,method="fix",number.int=60,...) 
 }
 
 #... can be some or all of 

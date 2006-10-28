@@ -23,7 +23,7 @@ surv.time<-c(1,2,4,3,5,6,1,6,2,3,4,7,5,1,6,7,10,2,10,5)
 birth.time<-c(1,11,23,4,23,5,7,12,5,12,23,12,15,21,4,6,1,4,13,11)
 status<-c(1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,1,0,1)
 my.TwoWaySurv.object<-TwoWaySurv(surv.time=surv.time,birth.time=birth.time,status=status)
-x<-TwoWaySurvfitCreate(my.TwoWaySurv.object~1)
+x<-TwoWaySurvfitCreate(my.TwoWaySurv.object~1,component="non.periodic")
 plot.TwoWaySurvfit(x)
 dev.off()
 }

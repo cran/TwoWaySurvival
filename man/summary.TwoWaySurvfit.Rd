@@ -20,7 +20,7 @@ their estimated variances as well as penalty values and marginal log-likelihoods
 birth.time<-c(1,11,23,4,23,5,7,12,5,12,23,12,15,21,4,6,1,4,13,11)
 status<-c(1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,1,0,1)
 my.TwoWaySurv.object<-TwoWaySurv(surv.time=surv.time,birth.time=birth.time,status=status)
-x<-TwoWaySurvfitCreate(my.TwoWaySurv.object)
+x<-TwoWaySurvfitCreate(my.TwoWaySurv.object,component="non.periodic")
 summary.TwoWaySurvfit(x)
 }
 \keyword{print}
