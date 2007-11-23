@@ -1,4 +1,4 @@
-"summary.TwoWaySurvfit" <-
+"summary.OneWaySurvfit" <-
 function(object,...)
 {
 cat("beta coefficients","\n\n")

@@ -88,7 +88,7 @@ return(list(grid=grid,y.list=Yt.list,m.list=Mt.list,o.list=Ot.list,x=Xt))
 
 ginverse<-function(X,tol=1e-100)
 {
-Xsvd<-svd(X,LINPACK=T)
+Xsvd<-svd(X,LINPACK=TRUE)
 if (is.complex(X)) Xsvd$u<-Conj(Xsvd$u)
 Positive<-Xsvd$d > max(tol * Xsvd$d[1], 0)
 if (all(Positive)) Xsvd$v %*% (1/Xsvd$d * t(Xsvd$u))
@@ -136,8 +136,8 @@ p<-ncol(Design.variables)-1 #number of varaibles (including factor levels by fac
 bs.order<-4   
 bs.degree<-bs.order-1 
 
-if (length(grep("num.knots.t",names(control)))==0) knots.t<-default.knots(data.set$time) else knots.t<-default.knots(data.set$time,num.knots)
-if (length(grep("num.knots.b",names(control)))==0) knots.b<-default.knots(data.set$birth) else knots.b<-default.knots(data.set$birth,num.knots)
+if (length(grep("num.knots.t",names(control)))==0) knots.t<-default.knots(data.set$time) else knots.t<-default.knots(data.set$time,num.knots.t)
+if (length(grep("num.knots.b",names(control)))==0) knots.b<-default.knots(data.set$birth) else knots.b<-default.knots(data.set$birth,num.knots.b)
 
 
 
@@ -329,7 +329,7 @@ for (i in 1:30) gc()
 ########################################################################
 if (p > 0)
 {  
-variables.t<-Design.variables[,2:ncol(Design.variables),drop=F]
+variables.t<-Design.variables[,2:ncol(Design.variables),drop=FALSE]
 Design.matrix.t<-cbind(Basis.t,eval(parse(text=paste("cbind(",paste("variables.t[,",1:p,"]*Basis.t",sep="",collapse=","),")"))))
 } else
 Design.matrix.t<-Basis.t
@@ -436,7 +436,7 @@ names(teta.b)<-names(teta.b.new)
 ##############################################    
 #likelihood for alpha.t, alpha.b be given#####
 ##############################################
-offset.tij.list<-lapply(1:N,FUN=function(i) matrix(rep(Design.matrix.b[i,],m.list[i]),nrow=m.list[i],byrow=T)%*%teta.b + offset.list[[i]])
+offset.tij.list<-lapply(1:N,FUN=function(i) matrix(rep(Design.matrix.b[i,],m.list[i]),nrow=m.list[i],byrow=TRUE)%*%teta.b + offset.list[[i]])
 unlist.offset.tij.list<-unlist(offset.tij.list)
 
 
@@ -487,8 +487,8 @@ names(teta.t)<-names(teta.t.new)
 ################################
 #update of random effects#######
 ################################
-u.t<-teta.t.new[grep("u.t",names(teta.t),fixed=T)]
-u.b<-teta.b.new[grep("u.b",names(teta.b),fixed=T)]
+u.t<-teta.t.new[grep("u.t",names(teta.t),fixed=TRUE)]
+u.b<-teta.b.new[grep("u.b",names(teta.b),fixed=TRUE)]
 
 
 if (control$print.epoch)
@@ -543,7 +543,7 @@ variance.penalty.old<-c(variance.penalty.t.old,variance.penalty.b.old)
 
 
 #for t-direction
-variance.t.Baseline<-as.vector((crossprod(u.t[grep("Baseline",names(u.t),fixed=T)],Penalty.matrix.t%*%u.t[grep("Baseline",names(u.t),fixed=T)]) + sum(diag(inverse.I.t.u.t[1:K.t,1:K.t]%*%Penalty.matrix.t[1:K.t,1:K.t])))/(K.t-2))
+variance.t.Baseline<-as.vector((crossprod(u.t[grep("Baseline",names(u.t),fixed=TRUE)],Penalty.matrix.t%*%u.t[grep("Baseline",names(u.t),fixed=TRUE)]) + sum(diag(inverse.I.t.u.t[1:K.t,1:K.t]%*%Penalty.matrix.t[1:K.t,1:K.t])))/(K.t-2))
 variance.penalty.t[1]<-variance.t.Baseline
 #############################################################
 #for-loop (in t) for the factor levels of covariables########
@@ -556,7 +556,7 @@ if (p > 0) for (k in 1:p) Penalty.matrix.teta.t[(K.t+(k-1)*K.t+1):(K.t+k*K.t),(K
 
 
 #for b-direction
-variance.b.Baseline<-as.vector((crossprod(u.b[grep("Baseline",names(u.b),fixed=T)],Penalty.matrix.b%*%u.b[grep("Baseline",names(u.b),fixed=T)]) + sum(diag(inverse.I.b.u.b[1:K.b,1:K.b]%*%Penalty.matrix.b[1:K.b,1:K.b])))/(K.b-2))
+variance.b.Baseline<-as.vector((crossprod(u.b[grep("Baseline",names(u.b),fixed=TRUE)],Penalty.matrix.b%*%u.b[grep("Baseline",names(u.b),fixed=TRUE)]) + sum(diag(inverse.I.b.u.b[1:K.b,1:K.b]%*%Penalty.matrix.b[1:K.b,1:K.b])))/(K.b-2))
 variance.penalty.b[1]<-variance.b.Baseline
 #############################################################
 #for-loop (in b) for the factor levels of covariables########
@@ -728,8 +728,8 @@ names(grid.t)<-1:length(grid.t)
 names(grid.b)<-1:length(grid.b)
 
 #specify knots
-if (length(grep("num.knots.t",names(control)))==0) knots.t<-default.knots(grid.t) else knots.t<-default.knots(grid.t,num.knots)
-if (length(grep("num.knots.b",names(control)))==0) knots.b<-default.knots(grid.b) else knots.b<-default.knots(grid.b,num.knots)
+if (length(grep("num.knots.t",names(control)))==0) knots.t<-default.knots(grid.t) else knots.t<-default.knots(grid.t,num.knots.t)
+if (length(grep("num.knots.b",names(control)))==0) knots.b<-default.knots(grid.b) else knots.b<-default.knots(grid.b,num.knots.b)
 
 #specify spline.bases
 B.grid.t<-splineDesign(knots=knots.t,ord=bs.order,x=grid.t)
@@ -792,15 +792,15 @@ names(var.random)<-sub("u","variance.u",names(var.random))
 ######################################################################
 #varying coefficients for Baseline and covariables####################
 ######################################################################
-alpha.t.Baseline<-B.grid.t%*%u.t[grep("Baseline",names(u.t),fixed=T)]
-alpha.b.Baseline<-B.grid.b%*%u.b[grep("Baseline",names(u.b),fixed=T)]
+alpha.t.Baseline<-B.grid.t%*%u.t[grep("Baseline",names(u.t),fixed=TRUE)]
+alpha.b.Baseline<-B.grid.b%*%u.b[grep("Baseline",names(u.b),fixed=TRUE)]
 
 if (p > 0)
 {
 for (k in 1:p)
   {
-assign(paste("alpha.t.",factor.names[k+1],sep=""),B.grid.t%*%u.t[grep(paste("u.t.",factor.names[k+1],sep=""),names(u.t),fixed=T)])  
-assign(paste("alpha.b.",factor.names[k+1],sep=""),B.grid.b%*%u.b[grep(paste("u.b.",factor.names[k+1],sep=""),names(u.b),fixed=T)])
+assign(paste("alpha.t.",factor.names[k+1],sep=""),B.grid.t%*%u.t[grep(paste("u.t.",factor.names[k+1],sep=""),names(u.t),fixed=TRUE)])  
+assign(paste("alpha.b.",factor.names[k+1],sep=""),B.grid.b%*%u.b[grep(paste("u.b.",factor.names[k+1],sep=""),names(u.b),fixed=TRUE)])
 }
 }
 

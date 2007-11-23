@@ -4,14 +4,15 @@
 \description{Prints estimates of fixed parameters of smoothing varying coefficients
 as well as penalty values for their random parts.
 }
-\usage{print.TwoWaySurvfit(x,...)
+\usage{
+\method{print}{TwoWaySurvfit}(x,...)
 }
 \arguments{
   \item{x}{  object of class 'TwoWaySurvfit'}
   \item{...}{  additional parameters for print}
 }
 \references{Kauermann G. and Khomski P. (2006). Additiv two way hazards model with varying coefficients.
-\emph{Computational Statistics and Data Analysis}, in press.}
+\emph{Computational Statistics and Data Analysis}, 51, 1944-1956.}
 \author{Pavel Khomski <pkhomski@wiwi.uni-bielefeld.de>}
 \seealso{\code{\link{summary.TwoWaySurvfit}}, \code{\link{plot.TwoWaySurvfit}}}
 \examples{surv.time<-c(1,2,4,3,5,6,1,6,2,3,4,7,5,1,6,7,10,2,10,5)

@@ -3,7 +3,8 @@
 \title{Objects Summaries}
 \description{prints detailed results from the fitting of the two-way hazards modelling.
 }
-\usage{summary.TwoWaySurvfit(object,...)
+\usage{
+\method{summary}{TwoWaySurvfit}(object,...)
 }
 \arguments{
   \item{object}{an object of class 'TwoWaySurvfit'}
@@ -13,7 +14,7 @@
 their estimated variances as well as penalty values and marginal log-likelihoods at start point and at optimum.
 }
 \references{Kauermann G. and Khomski P. (2006). Additiv two way hazards model with varying coefficients.
-\emph{Computational Statistics and Data Analysis}, in press.}
+\emph{Computational Statistics and Data Analysis}, 51, 1944-1956.}
 \author{Pavel Khomski <pkhomski@wiwi.uni-bielefeld.de>}
 \seealso{\code{\link{print.TwoWaySurvfit}}, \code{\link{plot.TwoWaySurvfit}}}
 \examples{surv.time<-c(1,2,4,3,5,6,1,6,2,3,4,7,5,1,6,7,10,2,10,5)

@@ -4,7 +4,8 @@
 \description{'plot.TwoWaySurvfit' is a proposed function for plotting of smooth components of the model,
 one plot for each baseline and covariate (or factor level) effect, for survival time and birth time accordingly.
 }
-\usage{plot.TwoWaySurvfit(x,...)
+\usage{
+\method{plot}{TwoWaySurvfit}(x,...)
 }
 \arguments{
  \item{x}{object of class 'TwoWaySurvfit'}
@@ -14,7 +15,7 @@ one plot for each baseline and covariate (or factor level) effect, for survival 
 One can use the object components for producing his own plots. 
 }
 \references{Kauermann G. and Khomski P. (2006). Additiv two way hazards model with varying coefficients.
-\emph{Computational Statistics and Data Analysis}, in press.}
+\emph{Computational Statistics and Data Analysis}, 51, 1944-1956}
 \author{Pavel Khomski <pkhomski@wiwi.uni-bielefeld.de>}
 \seealso{\code{\link{print.TwoWaySurvfit}}, \code{\link{summary.TwoWaySurvfit}}}
 \examples{pdf(file="myplot.pdf",h=12,w=12)

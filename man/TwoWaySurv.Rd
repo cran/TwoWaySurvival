@@ -18,7 +18,7 @@ numeric vectors. NA's can be supplied but will not be supported  by  the functio
 }
 \value{An object of class 'TwoWaySurv'.}
 \references{Kauermann G. and Khomski P. (2006): Additiv two-way hazards model with varying coefficients.
-\emph{Computational Statistics and Data Analysis}, in press.
+\emph{Computational Statistics and Data Analysis}, 51, 1944-1956.
 }
 \author{Pavel Khomski <pkhomski@wiwi.uni-bielefeld.de>}
 \seealso{ \code{\link{TwoWaySurvfitCreate}}}

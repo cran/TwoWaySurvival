@@ -1,4 +1,4 @@
-"print.TwoWaySurvfit" <-
+"print.OneWaySurvfit" <-
 function(x,...)
 {
 cat("fixed coefficients","\n\n")

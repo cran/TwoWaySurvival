@@ -3,7 +3,7 @@
 \alias{unemployed}
 \title{Sample of german unemployed}
 \description{This data give the time spent in the unemployment spell and the calendar time of entry in that spell for a sample of german
-unemployed individuals. The full data have been resived from the \emph{Deutsches Institut für Wirtschaftsforschung} 
+unemployed individuals. The full data have been resived from the \emph{Deutsches Institut fuer Wirtschaftsforschung} 
 and were analysed in the larger study. The results can be found in the supplemented paper.
 }
 \usage{data(unemployed)

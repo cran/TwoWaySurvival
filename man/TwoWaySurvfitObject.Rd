@@ -25,7 +25,7 @@ and representing a fitted additiv two-way hazard model with varying coefficients
   \item{factor.names}{covariate names; for factors the names of categories (excluding reference category).}
   } 
 \references{Kauermann G. and Khomski P. (2006). Additiv two way hazards model with varying coefficients.
-\emph{Computational Statistics and Data Analysis}, in press.
+\emph{Computational Statistics and Data Analysis}, 51, 1944-1956.
 }
 \author{Pavel Khomski <pkhomski@wiwi.uni-bielefeld.de>}
 \seealso{\code{\link{TwoWaySurv}}, \code{\link{TwoWaySurvfitCreate}}}
