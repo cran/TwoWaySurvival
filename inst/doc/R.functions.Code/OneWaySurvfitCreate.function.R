@@ -39,7 +39,7 @@ m$basis<-NULL
 m[[1]] <- as.name("model.frame")
 m <- eval(m, parent.frame()) 
 n <- nrow(m)
-Y <- model.extract(m, response)   #Y has three named columns: time, birth, status
+Y <- model.extract(m, "response")   #Y has three named columns: time, birth, status
 if (!inherits(Y,"OneWaySurv")) stop("Response must be a survival object with specified survival time and censor indicator")
 ll <- attr(Terms, "term.labels")
 if (length(ll) == 0)  {X <- as.data.frame(rep(1, n));names(X)<-"Intercept"}  else X <- m[ll]  #X has covariates
